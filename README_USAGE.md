@@ -41,7 +41,7 @@ TODO:
 ![network 1](image_docker_ui/network.jpg)
 ![network 2](image_docker_ui/network_detail.jpg)
 
-Tool được viết khá lâu so với hiện tại, nên hiện nay sẽ không chạy được với các version mới do API docker swarm đã chỉnh sửa.
+Tool được viết khá lâu so với hiện tại đầu năm 2016, nên hiện nay sẽ không chạy được với các version mới do API docker swarm đã chỉnh sửa.
 Tool có khá nhiều lỗi về security...
 
 ```
