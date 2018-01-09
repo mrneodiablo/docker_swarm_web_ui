@@ -22,25 +22,22 @@ TODO:
 ---
 
 #### Dashboard
-![alt text](https://gitlab.g6.zing.vn/dongvt/python/raw/master/django/example/docker_swarm_ui/image_docker_ui/container_detail.jpg)
+![alt text](https://github.com/mrneodiablo/docker_swarm_web_ui/tree/master/image_docker_ui/container_detail.jpg)
 
 #### Containers
-![alt text](https://gitlab.g6.zing.vn/dongvt/python/raw/master/django/example/docker_swarm_ui/image_docker_ui/container.jpg)
-![alt text](https://gitlab.g6.zing.vn/dongvt/python/raw/master/django/example/docker_swarm_ui/image_docker_ui/container_detail.jpg)
+![alt text](https://github.com/mrneodiablo/docker_swarm_web_ui/tree/master/image_docker_ui/container.jpg)
+![alt text](https://github.com/mrneodiablo/docker_swarm_web_ui/tree/master/image_docker_ui/container_detail.jpg)
 
 #### Nodes
-![alt text](https://gitlab.g6.zing.vn/dongvt/python/raw/master/django/example/docker_swarm_ui/image_docker_ui/node.jpg)
-![alt text](https://gitlab.g6.zing.vn/dongvt/python/raw/master/django/example/docker_swarm_ui/image_docker_ui/node_detail.jpg)
+![alt text](https://github.com/mrneodiablo/docker_swarm_web_ui/tree/master/image_docker_ui/node.jpg)
+![alt text](https://github.com/mrneodiablo/docker_swarm_web_ui/tree/master/image_docker_ui/node_detail.jpg)
 
 
 #### Volumes
-![alt tag](https://gitlab.g6.zing.vn/dongvt/python/raw/master/django/example/docker_swarm_ui/image_docker_ui/volume.jpg)
+![alt tag](https://github.com/mrneodiablo/docker_swarm_web_ui/tree/master/image_docker_ui/volume.jpg)
 
 #### Networks
-![alt tag](https://gitlab.g6.zing.vn/dongvt/python/raw/master/django/example/docker_swarm_ui/image_docker_ui/network.jpg)
-![alt tag](https://gitlab.g6.zing.vn/dongvt/python/raw/master/django/example/docker_swarm_ui/image_docker_ui/network_detail.jpg)
+![alt tag](https://github.com/mrneodiablo/docker_swarm_web_ui/tree/master/image_docker_ui/network.jpg)
+![alt tag](https://github.com/mrneodiablo/docker_swarm_web_ui/tree/master/image_docker_ui/network_detail.jpg)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 54716162a2c2c9117089b111efd0d3e8838d9012

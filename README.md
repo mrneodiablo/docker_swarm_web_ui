@@ -1,13 +1,20 @@
 # Web control Docker Swarm
+ 
+---
 TODO: Được viết bằng python2.7 dùng framwork django(1.11) trên sử dụng database MySQL và API của Docker daemon để quản lý
 
+## Usage
+[ Hướng Dẫn sử dụng Docker Swarm ](https://github.com/mrneodiablo/docker_swarm_web_ui/blob/master/README_USAGE.md)
+
+## Installation
+--
 REQUEST:
 OS : Centos 6.8 for master
 OS : Centos 7.2 for ageent
 
 ---
 
-## Installation
+
 
 ### Master
 - install python2.7
@@ -359,5 +366,3 @@ user/pass defaule admin/admin
 
 ---
 
-## Usage
-[ Hướng Dẫn sử dụng Docker Swarm ](https://gitlab.g6.zing.vn/dongvt/python/blob/master/django/example/docker_swarm_ui/README_USAGE.md)
