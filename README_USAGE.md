@@ -22,7 +22,7 @@ TODO:
 ---
 
 #### Dashboard
-![alt text](https://github.com/mrneodiablo/docker_swarm_web_ui/tree/master/image_docker_ui/container_detail.jpg)
+![Dash board](image_docker_ui/container_detail.jpg)
 
 #### Containers
 ![alt text](https://github.com/mrneodiablo/docker_swarm_web_ui/tree/master/image_docker_ui/container.jpg)
