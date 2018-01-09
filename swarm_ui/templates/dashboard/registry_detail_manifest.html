@@ -1,0 +1,47 @@
+{% extends "dashboard/index.html" %} 
+
+
+{% block content %}
+    <section class="content-header">
+      <h1>
+        Registry
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url "DashBoard" %}"><i class="fa fa-copy"></i> Home</a></li>
+        <li><a href="{% url "RegistryBoard" %}">Registry</a></li>
+        <li>{{ images_name }}</li>
+        <li>{{ tag_name }}</li>
+      </ol>
+    </section>
+
+<section class="content">
+  <div class="panel"> 
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr align="center">
+                <th>Image</th>
+                <th>Create</th>
+                <th>Cmd</th>
+                <th>Size</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for value in return_value %}
+              <tr class="ng-scope">
+                  <td>{{ value.Image|truncatechars:12 }}</td>
+                  <td>{{ value.Created|truncatechars:21 }}</td>
+                  <td>
+                    {% for cmd in value.Cmd %}
+                      {{ cmd }}
+                    {% endfor %}
+                  </td>
+                  <td>{{ value.Size }}</td>
+   
+              </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
+ 

@@ -1,0 +1,177 @@
+{% extends "dashboard/index.html" %} 
+
+
+{% block content %}
+
+
+
+    <section class="content-header">
+      <h1>
+        Images
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url "DashBoard" %}"><i class="fa fa-cubes"></i> Home</a></li>
+        <li class="active">Images</li>
+      </ol>
+    </section>
+
+    <section class="content-header">
+      <div class="row">
+        <div class="form-group navbar-left" style="margin-left: 15px">
+              <button type="button" class="btn btn-primary" onClick="window.location.reload()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true" ></span> Refresh
+              </button>
+              {% if "1" in request.session.permission or "6" in request.session.permission %}
+                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+                  <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Pull Images    
+                  </button>
+            {% endif %}
+            <!-- Modal -->
+             <form class="navbar-form " action="{% url "ImagesPull" %}"  method="POST"  data-toggle="validator" validate>{% csrf_token %}
+              <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-sm" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title " id="myModalLabel">Pull Images</h4>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+                        <div>
+                            <label>Registry Address:</label>
+                            <input type="text"  class="form-control" placeholder="Registry" name="registry" id="registry" >
+                        </div>
+                        <div>
+                            <label>Image Name:</label>
+                            <input type="text"  class="form-control " placeholder="Image" name="image" id="image" required>
+                        </div>
+                        <div>
+                            <label >Tag Images:</label></br>
+                            <input type="text"  class="form-control"  value="latest" name="tag" id="tag"  required>
+                        </div>
+                         <div>
+                            <label >Process</label></br>
+                            <p id="process_pull"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" name="pull" value="pull" id='submit_pull'>Pull</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+        </div>
+      </div>
+    </section>
+
+<section class="content-body">
+
+  <div class="panel-body">
+    <div class="panel">
+      <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Id</th>
+                <th>Virtual Size</th>
+                <th>Created</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for key in return_value %}
+            <tr class="ng-scope">
+                <td >
+                  {% for i in key.repo_tags %}
+                    <span class="label label-info">
+                        <a href="{% url "ImagesBoard" %}/{{ key.link  }}" class="ng-binding" style="color: white  ">{{ i }}</a>
+                    </span>  {% endfor %}</td>
+                <td style="word-wrap: break-word;min-width: 100px;max-width: 100px;">{{ key.id|truncatechars:20 }}</td>
+                <td class="ng-binding">{{ key.virtual_size }} MB</td>
+                <td class="ng-binding">{{ key.created }}</td>
+                <td class="ng-binding" style="align: center;">
+                   {% if "1" in request.session.permission or "6" in request.session.permission %}
+                      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ key.id_only }}"><span class="glyphicon glyphicon-trash" aria-hidden="true"  data-toggle="modal"></span>
+                    {% endif %}    
+                </td>
+
+                <!-- Modal -->
+                <form method="POST" name="remove_images" action="">{% csrf_token %}
+                <div class="modal fade" id="{{ key.id_only }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Remove Image: {{ key.id|truncatechars:20 }}</h4>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure you want to remove this image?
+                          <div>
+                            <label >Force:</label>
+                            <input type="checkbox" name="check_force_remove_image"  value="1" >
+                          </div> 
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-success" name="ok_remove" value="{{ key.id }}" >Yes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </form>
+
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+{% endblock %}
+
+{% block script %}
+  {% load staticfiles %}
+<script src="{% static "plugins/jQuery/jquery-2.2.3.min.js" %}"></script>
+
+{% load staticfiles %}
+<script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+<!-- FastClick -->
+
+{% load staticfiles %}
+<script src="{% static "plugins/fastclick/fastclick.js" %}"></script>
+<!-- AdminLTE App -->
+
+{% load staticfiles %}
+<script src="{% static "dist/js/app.min.js" %}"></script>
+<!-- Sparkline -->
+
+{% load staticfiles %}
+<script src="{% static "plugins/sparkline/jquery.sparkline.min.js" %}"></script>
+<!-- jvectormap -->
+
+{% load staticfiles %}
+<script src="{% static "plugins/jvectormap/jquery-jvectormap-1.2.2.min.js" %}"></script>
+
+{% load staticfiles %}
+<script src="{% static "plugins/jvectormap/jquery-jvectormap-world-mill-en.js" %}"></script>
+<!-- SlimScroll 1.3.0 -->
+
+{% load staticfiles %}
+<script src="{% static "plugins/slimScroll/jquery.slimscroll.min.js" %}"></script>
+
+{% load staticfiles %}
+<script src="{% static "dist/js/demo.js" %}"></script>
+
+
+{% load staticfiles %}
+<script src="{% static "dist/js/jquery.dataTables.min.js" %}"></script>
+
+{% load staticfiles %}
+<script src="{% static "dist/js/dataTables.bootstrap.min.js" %}"></script>
+
+{% load staticfiles %}
+<script  type="text/javascript" src="{% static "swarm_ui/js/docker_action.js" %}"></script>
+{% endblock %}

@@ -1,0 +1,54 @@
+
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Resource Report</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <p class="text-center">
+                    <strong>CPU</strong>
+                     <canvas id="cpu_dashboard" style="height: 50px;"></canvas>
+                  </p>
+
+                </div>
+                <!-- /.col -->
+                <div class="col-md-6">
+                  <p class="text-center">
+                    <strong>RAM</strong>
+                    <canvas id="ram_dashboard" style="height: 50px;"></canvas>
+                  </p>
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+            </div>
+
+
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+{% load staticfiles %}
+<script src="{% static "plugins/jQuery/jquery-2.2.3.min.js" %}"></script>
+
+{% load staticfiles %}
+<script src="{% static "js/chart.min.js" %}"></script>   
+
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "js/docker_dashboard.js" %}"></script>
+
+ <script type="text/javascript">
+  datacpudashboard = {
+    data: [Math.round(({{ cpus_node }}/{{ cpu_total }})*100), Math.round((({{ cpu_total }}-{{ cpus_node }}))/({{ cpu_total }})*100)]
+  }
+  dataramdashboard = {
+    data: [Math.round(({{ ram_node }}/{{ ram_total }})*100), Math.round((({{ ram_total }}-{{ ram_node }})/{{ ram_total }})*100)]
+  }
+ </script>

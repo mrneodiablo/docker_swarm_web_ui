@@ -1,0 +1,70 @@
+    <section class="sidebar">
+      <ul class="sidebar-menu">
+        
+        <li class="treeview">
+          <a href="{% url "DashBoard" %}">
+            <i class="fa fa-dashboard"></i>
+            <span> Dashboard</span>
+          </a>
+        </li>
+        <li class="header">RESOURCES CONTROL</li>
+        <li class="treeview">
+          <a href="{% url "ContainerBoard" %}">
+            <i class="fa fa-cubes"></i>
+            <span> Containers</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url "NodeBoard" %}">
+            <i class="fa fa-server"></i>
+            <span> Nodes</span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="{% url "VolumesBoard" %}">
+            <i class="fa fa-folder-open-o"></i>
+            <span> Volumes</span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="{% url "NetworksBoard" %}">
+            <i class="fa fa-sitemap"></i>
+            <span> Networks</span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="{% url "ImagesBoard" %}">
+            <i class="fa fa-file-image-o"></i>
+            <span> Images</span>
+          </a>
+        </li>
+        <li class="header">PRODUCT CONTROL</li>
+        <li class="treeview">
+          <a href="{% url "ProductBoard" %}">
+            <i class="fa fa-gamepad"></i>
+            <span> Product</span>
+          </a>
+        </li>
+        <li class="header">REGISTRIES CONTROL</li>
+        <li class="treeview">
+          <a href="{% url "RegistryBoard" %}">
+            <i class="fa fa-copy"></i>
+            <span> Registry</span>
+          </a>
+        </li>
+
+        <li class="header">USER CONTROL</li>
+        <li class="treeview">
+          <a href="{% url "UserBoard" %}">
+            <i class="fa fa-user"></i>
+            <span> Users</span>
+          </a>
+        </li>               
+        <li>
+          <a href="{% url "LogsBoard" %}">
+             <i class="fa fa-list-alt"></i>
+             <span> Logs</span>
+          </a>
+        </li>
+      </ul>
+    </section>

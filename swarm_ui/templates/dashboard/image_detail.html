@@ -1,0 +1,338 @@
+{% extends "dashboard/index.html" %} 
+
+ 
+{% block content %}
+
+    <section class="content-header">
+      <h1>
+        Images
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url "DashBoard" %}"><i class="fa fa-cubes"></i> Home</a></li>
+        <li><a href="{% url "ImagesBoard" %}">Images</a></li>
+        <li class="active">
+            {% for repo_tags in return_value.repo_tags %}
+              {{ repo_tags }}
+            {% endfor %}
+        </li>
+      </ol>
+    </section>
+
+    <section class="content">
+ <div class="panel panel-default">
+  <div class="panel-body">
+  <div class="row show-grid">
+    <div class="col-md-6" >
+      <font size="6">
+            {% for repo_tags in return_value.repo_tags %}
+                {{ repo_tags }}
+            {% endfor %}
+      </font>
+      <p>{{ return_value.id }}</p>
+    </div>  
+  </div><br>
+
+      <div class="row show-grid navbar">
+        <div style="margin-top: 7px; margin-left: 10px; ">
+            <div class="btn-group">
+              {% if "1" in request.session.permission or "6" in request.session.permission %}
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#add_tag_images_button"><span class="glyphicon glyphicon-tags" aria-hidden="true" ></span> Add Tag</button>
+              {% endif %}  
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#history_image_button">
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span> 
+                <span class="glyphicon-class">History</span>
+              </button>
+            </div>
+            <div class="btn-group">
+              {% if "1" in request.session.permission or "6" in request.session.permission %}
+                <button type="button" class="btn btn-danger" name="remove_images" data-toggle="modal" data-target="#remove_images_button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove Images</button>
+              {% endif %}  
+            </div>
+
+        </div>
+      </div>
+
+        <!-- Modal add tag inamges-->
+        <form method="POST" name="tag_images" action="{% url "ImagesTag" %}" data-toggle="validator" validate>{% csrf_token %}
+        <div class="modal fade" id="add_tag_images_button" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Tag image</h4>
+              </div>
+              <div class="modal-body">
+                  <div>
+                      <label>Tag:</label>
+                      <input type="text"  class="form-control" placeholder="Tag" name="repo" id="repo" >
+                  </div>
+                  <div>
+                      <label>Version:</label>
+                      <input type="text"  class="form-control " placeholder="Version" name="tag" id="tag" required>
+                  </div>
+                  <div>
+                      <label >Force:</label>
+                      <input type="checkbox" name="check_force" id="check_force" value="1" checked>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="submit" class="btn btn-success" name="ok_tag" value="{{ return_value.id_only }}" >Yes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </form>
+
+
+        <!-- Modal  remove inamges-->
+        <form method="POST" name="remove_images" action="">{% csrf_token %}
+        <div class="modal fade" id="remove_images_button" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Remove Image: {{ return_value.id|truncatechars:20 }}</h4>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to remove this image?
+                  <div>
+                    <label >Force:</label>
+                    <input type="checkbox" name="check_force_remove_image"  value="1" >
+                  </div>  
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="submit" class="btn btn-success" name="ok_remove" value="{{ return_value.id_only }}" >Yes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </form>
+
+        <!-- Modal history images -->
+        <div class="modal fade" id="history_image_button" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">History  
+                  {% for repo_tags in return_value.repo_tags %}
+                      {{ repo_tags }}
+                  {% endfor %}
+              </h4>
+              </div>
+              <div class="modal-body">
+                  <table class="table  table-striped">
+                      <thead> 
+                          <tr> 
+                            <th>Id</th> 
+                            <th>Created</th> 
+                            <th>CreatedBy</th> 
+                            <th>Tags</th>
+                            <th>Size</th>
+                          </tr> 
+                      </thead>
+                    <tbody>
+                      {% for values in history_value %}
+                            <tr>
+                              <th style="word-wrap: break-word;min-width: 50px;max-width: 50px;"  >{{ values.id| truncatechars:14  }}</th>
+                              <th style="word-wrap: break-word;min-width: 50px;max-width: 50px;" >{{ values.created }}</th>
+                              <th style="word-wrap: break-word;min-width: 160px;max-width: 160px;" >{{ values.created_by  }}</th>
+                              <th style="word-wrap: break-word;min-width: 50px;max-width: 50px;" >{{ values.tags  }}</th>
+                              <th style="word-wrap: break-word;min-width: 50px;max-width: 50px;" >{{ values.size  }} MB</th>
+                            </tr>
+                      {% endfor %}
+
+                    </tbody>
+                  </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+<!------------------------------------------>
+<div class="row show-grid">
+  <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 10px">Info</h4>    
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+        <table class="table">
+            <tbody>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Id</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ return_value.id }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Comment</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ return_value.comment }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Os</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ return_value.os }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Architecture</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ return_value.architecture }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Author</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ return_value.author }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Virtual Size</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ return_value.virtual_size }} MB</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Repo Digest</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">
+                    {% for repo_digests in return_value.repo_digests %}
+                        <p>{{ repo_digests }}</p>
+                    {% endfor %}
+                  </th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Repo Tags</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">
+                    {% for repo_tags in return_value.repo_tags %}
+                      <p>{{ repo_tags }}</p>
+                    {% endfor %}
+                  </th> 
+                </tr>
+            </tbody>
+        </table>
+</div>
+</div>
+
+
+
+<div class="row show-grid">
+  <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 10px">Configuration Container</h4>
+    </div>
+    <div id="collapseTow" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTow">
+        <table class="table">
+            <tbody>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None" >Host Name</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">{{ return_value.container_config.hostname }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Domain Name</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">{{ return_value.container_config.domainname }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">User</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">{{ return_value.container_config.user }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Attach Stdin</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">{{ return_value.container_config.attach_stdin }}</th> 
+                </tr>
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Attach Stdout</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">{{ return_value.container_config.attach_stdout }}</th> 
+                </tr>
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Attach Stderro</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">{{ return_value.container_config.attach_stderr }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Environment</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">
+                    {% for key in return_value.container_config.env %} 
+                        <p>{{ key }}</p> 
+                    {% endfor %}
+                  </th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Command</th> 
+                  <th style="word-wrap: break-word; border: None" class=" col-md-10" >
+                    {% for cmd in return_value.container_config.cmd %}
+                      <p> {{ cmd }} </p>
+                    {% endfor %}
+                  </th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Exposed Ports</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">
+                      {% for key, value in return_value.container_config.exposed_ports.items %}
+                          <p>{{ key }} : {{ value }}
+                      {% endfor %}
+                  </th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Volumes</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">
+                      {% for key, value in return_value.container_config.volumes.items %}
+                          <p>{{ key }} : {{ value }}
+                      {% endfor %}
+                  </th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Working Dir</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">{{ return_value.container_config.container_config }}</th> 
+                </tr>
+
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Entry Point</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">
+                      {% for entry_point in return_value.container_config.entry_point %}
+                          {{ entry_point }}
+                      {% endfor %}
+                  </th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Labels</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">
+                    {% for key, value in return_value.container_config.labels.items %}
+                      <p>{{ key }} : {{ value }}</p>
+                    {% endfor %}
+                  </th> 
+                </tr>
+            </tbody>
+        </table>
+</div>
+</div>
+
+
+<div class="row show-grid">
+  <div class="panel-group" id="image_rootfs" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 10px" >RootFS</h4>
+    </div>
+    <div id="image_rootfs_collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="image_root_fs_heading">
+      <table class="table">
+        <tbody>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Type</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">{{ return_value.root_fs.Type }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Layers</th> 
+                  <th class="text-nowrap col-md-10" style="border: None">
+                    {% for values in return_value.root_fs.Layers %}
+                      <p>{{ values }}</p>
+                    {% endfor %}
+                  </th> 
+                </tr>
+        </tbody>
+      </table>
+</div>
+</div>
+
+
+
+<!------------------------------------------>
+</div>
+</div>
+ </section>
+{% endblock %}
+

@@ -1,0 +1,247 @@
+{% extends "dashboard/index.html" %} 
+
+ 
+{% block content %}
+
+<section class="content-header">
+  <h1>
+    Networks
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url "DashBoard" %}"><i class="fa fa-sitemap"></i> Home</a></li>
+    <li><a href="{% url "NetworksBoard" %}">Networks</a></li>
+    <li class="active">{{ node_name }}/{{ return_value.Name }}</li>
+  </ol>
+</section>
+
+<section class="content">
+ <div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row show-grid">
+      <div class="col-md-6" >
+        <font size="6"><strong>{{ node_name }}/{{ return_value.Name }}</strong></font>
+      </div> 
+    </div>
+
+            <!-- Modal -->
+            <form method="POST" name="remove_network" action="">{% csrf_token %}
+            <div class="modal fade" id="remove_network" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Remove Driver Network: {{ key.name }}</h4>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure you want to remove this network?
+                    ID : {{ return_value.Id }}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-success" name="ok_remove" value="{{ return_value.Id }}" >Yes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </form>  
+
+            <div class="row show-grid navbar">
+              <div style="margin-left: 15px; ">
+                <div class="btn-group">
+                   {% if "1" in request.session.permission or "5" in request.session.permission %}
+                      <button type="button" class="btn btn-info" data-toggle="modal" data-target="#connect_network">
+                        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Connect Container
+                      </button>
+                   {% endif %}           
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal -->
+            <form method="POST"  action="">{% csrf_token %}
+            <div class="modal fade" id="connect_network" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Connect Driver Network: {{ key.name }}</h4>
+                  </div>
+                  <div class="modal-body">
+                              <label  for="sel1">PRODUCT</label>
+                              <p>{{ return_product }}</p>
+                              <label  for="sel1">SUBNET</label>
+                               <p>{% for item in return_value.IPAM.Config %}{% if item.Subnet %}{{ item.Subnet }}{% endif %}{% endfor %}</p>
+                              <label  for="sel1">GATEWAY</label>
+                              <p>{% for item in return_value.IPAM.Config %}{% if item.Gateway %}{{ item.Gateway }}{% endif %}{% endfor %}</p>
+                              <label  for="sel1">Container</label>
+
+                              <select class="form-control"  name="choose_container">
+                                {% for master  in container_list %}
+                                      {% for key, value in master.labels.items %}
+                                        {% if key == "mto.product.name" and value == return_product and master.host == node_name %}       
+                                          <option value="{{ master.id }}">{{ master.host }}/{{ master.name }}</option> 
+                                        {% endif %}
+                                      {% endfor %}
+                                {% endfor %}  
+                              </select>
+                              <label  for="sel1">IP Adress</label>
+                              <input class="form-control" type="text" name="ip_connect" placeholder="" >
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-success" name="ok_connect" value="ok" >Yes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </form>  
+
+<div class="row show-grid">
+   <div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 15px">Containers Connected</h4>
+    </div>
+    <div id="collapse3" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading3">
+      <table class="table  table-striped" id="networkconnect">
+        <tbody>
+          {% for key_item, values_item in return_value.Containers.items %}    
+                  <tr>
+                        {% for key, values in values_item.items %}
+                            {% if key == 'Name' %}
+                                  <td>{{ values }}</td>
+                            {% endif %}                                   
+                        {% endfor %}
+                         {% for key, values in values_item.items %}
+                            {% if key == 'IPv4Address' %}
+                                  <td><span class="label label-primary">IP Adress</span> {{ values }}</td>
+                            {% endif %}                                    
+                        {% endfor %}
+                                                 
+                      <td class="text-nowrap col-md-2">
+                       {% if "1" in request.session.permission or "5" in request.session.permission %} 
+                          <button type="button" class="btn btn-danger" data-toggle="modal"  data-target="#{{ key_item }}">
+                                 Disconect
+                          </button>
+                        {% endif %}  
+                      </td>    
+                  </tr> 
+
+            <!-- Modal -->
+            <form method="POST" name="disconnect_network" action="">{% csrf_token %}
+            <div class="modal fade" id="{{ key_item }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Disconnect Driver Network: {{ key_item }}</h4>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure you want to disconnect this network?
+                    <div>
+                          <label>Force:</label>
+                          <input type="checkbox" name="force_disconnect" id="force_disconnect" value="1" checked="">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-success" name="ok_disconnect" value="{{ key_item }}" >Yes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </form> 
+          {% endfor %}
+       
+        </tbody>
+      </table>
+    </div>
+</div>
+
+
+<div class="row show-grid">
+  <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 15px"> Network Configure</h4>
+      
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+        <table class="table">
+            <tbody>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">ID</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ return_value.Id }}</th> 
+                </tr>              
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Name</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ return_value.Name }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Node</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ node_name }}</th> 
+                </tr>                
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Driver</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ return_value.Driver }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Subnet</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">
+                      {% for item in return_value.IPAM.Config %}
+                          {% if item.Subnet %}
+                            <p>{{ item.Subnet }}</p>
+                          {% endif %}  
+                      {% endfor %}
+                  </td> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" style="border: None">Gateway</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">
+                      {% for item in return_value.IPAM.Config %}
+                          {% if item.Gateway %}
+                            <p>{{ item.Gateway }}</p>
+                          {% endif %}  
+                      {% endfor %}
+                  </td> 
+                </tr>                                
+            </tbody>
+        </table>
+    </div>
+  </div>
+
+
+<div class="row show-grid">
+  <div class="panel-group" id="accordion5" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 15px">Options</h4> 
+            {% for keys, values  in return_value.Options.items %}
+                 <p style="margin-left: 10px"><strong> {{keys}}      :      {{ values }}</strong></p> 
+            {% endfor %} 
+  </div>
+</div>
+
+<div class="row show-grid">
+  <div class="panel-group" id="accordion10" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 15px">Labels</h4>     
+    </div>
+    <div id="collapse10" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading10">
+      <table class="table">
+          <thead> 
+              <tr> 
+                <th style="border: None">Variable</th> 
+                <th style="border: None" >Value</th> 
+              </tr> 
+          </thead>
+        <tbody>
+            {% for keys, values  in return_value.Labels.items %}
+                <tr>
+                  <td style="border: None" class="text-nowrap col-md-2">{{keys}}</td>
+                  <td style="border: None" class="text-nowrap col-md-5">{{ values }}<br></td> 
+                </tr>
+            {% endfor %} 
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+</div>
+</section>
+
+{% endblock %}

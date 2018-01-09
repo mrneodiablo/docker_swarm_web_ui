@@ -1,0 +1,49 @@
+{% extends "dashboard/index.html" %} 
+
+
+{% block content %}
+    <section class="content-header">
+      <h1>
+        Registry
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url "DashBoard" %}"><i class="fa fa-copy"></i> Home</a></li>
+        <li><a href="{% url "RegistryBoard" %}">Registry</a></li>
+        <li>{{ registry_name }}</li>
+      </ol>
+    </section>
+<section class="content">
+<div class="panel"> 
+  <table class="table table-striped table-bordered ng-scope">
+      <thead>
+          <tr align="center">
+              <th>Name</th>
+              <th>Tag</th>
+              <th>Action</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for key, value in return_value.items %}
+
+          {% for tags in value.data.tags %}
+            <tr class="ng-scope">
+                <td>{{ key }}</td>
+                <td>
+                  <form method="post">{% csrf_token %}
+                    <button type="submit" class="btn btn-default" value="{{ key }}|{{ tags }}" name="okie">{{ tags }}</button>
+                  
+                </td>
+                <td>
+                  <button type="submit" class="btn btn-danger" value="{{ key }}|{{ tags }}" name="okie_remove"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="modal"></span></button>
+                </td>
+                </form>  
+            </tr>
+                </form>   
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+  </table>
+</div>
+</section>
+{% endblock %}
+ 

@@ -1,0 +1,33 @@
+  <header class="main-header">
+
+    <!-- Logo -->
+    <a href="{% url "DashBoard" %}" class="logo">
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><i class="fa fa-cloud"></i><b> Docker Swarm</b></span>
+    </a>
+
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+      </a>
+      <!-- Navbar Right Menu -->
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          {% if request.session.username  %}
+            <li>
+              <a href="#">  
+                  <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ request.session.username }}
+              </a>
+            </li>
+            <li>
+              <a href="{% url "LogoutBoard" %}">
+                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+    </nav>
+  </header>

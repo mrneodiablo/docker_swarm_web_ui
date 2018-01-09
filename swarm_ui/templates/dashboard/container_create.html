@@ -1,0 +1,177 @@
+
+{% extends "dashboard/index.html" %} 
+
+
+{% block content %}
+
+<section class="content-header">
+  <h1>
+    Containers
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url "DashBoard" %}"><i class="fa fa-user"></i> Home</a></li>
+    <li><a href="{% url "ContainerBoard" %}">Containers</a></li>
+    <li class="active">Create</li>
+  </ol>
+</section>
+
+<div class="panel-body" style="margin-top: 50px">
+<form  action="{% url "ContainerCreate" %}"  method="POST"   data-toggle="validator" validate>{% csrf_token %}
+        <div  class="ui bottom attached active tab segment">
+            <div class="ui form">
+                <h3 class="ui header">Container Deployment</h3>
+                <div class="ui two column grid">
+                    <div class="column">
+                        <div class="ui horizontal segment">
+                            <h5 class="ui dividing header">Container</h5>
+
+                            <div class="two fields">
+                                <div class="field">
+                                    <label>Name</label>
+                                    <input name="container_name" id="container_name" class="input ng-pristine ng-untouched ng-valid" type="text" placeholder="Container Name" >
+                                </div>
+                                <div class="field">
+                                    <label>Product</label>
+                                    <div class="ui corner labeled input">
+                                        <select  name="list_product" id="list_product" required>
+                                            <option value="">None</option>
+                                            {% for value in return_list_product %}
+                                                <option value="{{ value.name }}">{{ value.name }}</option>
+                                            {% endfor %}
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                                                        <div class="fields">
+                                <div class="eight wide field">
+                                    <label>Hostname</label>
+                                    <div id="hostname"><input name="hostname"   class="input ng-pristine ng-valid ng-touched" type="text" placeholder="Hostname"></div>
+                                </div>
+                                <div class="eight wide field">
+                                    <label>Command</label>
+                                    <input name="cmd" class="input ng-pristine ng-valid ng-touched" type="text"  placeholder="Command">
+                                </div>
+                            </div>
+                            <h5 class="ui dividing header">Swarm Constraint</h5>
+                            <div class="fields">
+                                <div >
+                                    <label>Node</label>
+                                    <select name="node" id="node" class="input ng-pristine ng-untouched ng-valid">
+                                            {% for value  in return_list_node %}
+                                                <option value="{{ value.name }}">{{ value.name }}</option>
+                                            {% endfor %}    
+                                        </select>
+                                </div>
+                            </div> 
+                            <h5 class="ui dividing header">Image</h5>
+                            <div class="two fields">
+                                <div class="field">
+                                    <label>Registry</label>
+                                    <select name="registry" id="registry" required>
+                                        <option value="">None</option>
+                                        {% for value in return_list_registry %}
+                                            <option value="{{ value.name }}">{{ value.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label>Image Name</label>
+                                    <div class="ui corner labeled input">
+                                        <select default="0" name="list_images" id="list_images" required></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="ui dividing header">Volumes</h5>
+                            <div class="fields">
+                                <div class="seven wide field">
+                                    <label>Host Path</label>
+                                    <div id="hostpath"><input name="hostpath"   class="input ng-pristine ng-untouched ng-valid" type="text"placeholder="Host Path"></div>
+                                </div>
+                                <div class="seven wide field">
+                                    <label>Container Path</label>
+                                    <input name="Containerpath" class="input ng-pristine ng-untouched ng-valid" type="text" placeholder="Container Path" value="/data" readonly>
+                                </div>        
+                            </div>                          
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="ui horizontal ">
+                            <h5 class="ui dividing header">Resource</h5>
+                            <div class="two fields">
+                                <div class="field">
+                                    <label>CPUs</label>
+                                    <div id="cpu_input">
+                                        <input type="number" name="cpus" id="cpus" class="input ng-pristine ng-untouched ng-valid" type="text"  placeholder="1" required>
+                                    </div>
+                                    
+                                </div>
+                                <div class="field">
+                                    <label>Memory (MB)</label>
+                                    <input name="memory" class="input ng-pristine ng-valid ng-touched" type="text"  placeholder="1024" required>
+                                </div>
+                            </div>
+                            <h5 class="ui dividing header">Network</h5>
+                            <div class="field">
+                                <div tabindex="0">
+                                    <label>Mode</label>
+                                    <select name="list_network" id="list_network" required>
+                                        <option value="">None</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div tabindex="0">
+                                    <label>IP Address</label>
+                                    <input class="input ng-pristine ng-valid ng-touched" type="text"  name="ip_addess">
+                                </div>
+                            </div>                            
+                            <h5 class="ui dividing header">Container DNS</h5>
+                            <div class="fields">
+                                <div class="field">
+                                    <input name="containerDns" class="input ng-pristine ng-valid ng-touched" type="text"  placeholder="Container DNS"> 
+                                </div>
+                            </div>
+                            <h5 class="ui dividing header">Restart Policy</h5>
+                            <div class="two fields">
+                                <div class="field">
+                                    <div tabindex="0">
+                                        <select default="0" name="restart_policy">
+                                            <option value="">Do not automatically restart</option>
+                                            <option value="on-failure">Restart only on failure</option>
+                                            <option value="unless-stopped"> Restart always when has manually stopped</option>
+                                            <option value="always">Always restart</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="field ng-hide">
+                                    <input type="number" name="MaximumRetryCount" placeholder="Maximum restart count" class="ng-pristine ng-untouched ng-valid" value="0">
+                                </div>
+                            </div>
+                            <h5 class="ui dividing header">Advanced</h5>
+                            <div class="field">
+                                <div class="ui toggle checkbox ng-pristine ng-untouched ng-valid">
+                                    <input type="checkbox" name="privileged" id="privileged" class="ng-pristine ng-untouched ng-valid" value="True">
+                                    <label for="privileged">Allow container to run in privileged mode
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin: 0 0 20px 15px;">
+                        <button type="submit" class="btn btn-success" name="ok_create"  value="ok_create" >Create</button> 
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+{% load staticfiles %}
+<link href="{% static "css/semantic.min.css" %}" rel="stylesheet">
+{% load staticfiles %}
+<script src="{% static "plugins/jQuery/jquery-2.2.3.min.js" %}"></script>
+{% load staticfiles %}
+<script src="{% static "js/container_create.js" %}"></script>
+
+{% endblock %}
+

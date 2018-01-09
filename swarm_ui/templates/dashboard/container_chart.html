@@ -1,0 +1,473 @@
+{% extends "dashboard/index.html" %} 
+
+ 
+{% block content %}
+{% load staticfiles %}
+<script src="{% static "js/chart.min.js" %}"></script>     
+  
+<div class="panel-body" style="margin-top: 50px">
+  <ol class="breadcrumb">
+    <li><a href="{% url "DashBoard" %}">DashBoard</a></li>
+    <li ><a href="{% url "ContainerBoard" %}">Containers</a></li>
+    <li ><a href="{% url "ContainerBoard" %}/{{ return_value.name }}">{{ return_value.name }}</a></li>
+    <li class="active">charts</li>
+  </ol>
+</div>
+
+ <div class="panel panel-default">
+  <div class="panel-body">
+    <h2><strong>CPU</strong><h2>
+    <canvas id="cpuChart" width="200" height="50"></canvas>
+ </div>
+</div>       
+
+ <div class="panel panel-default">
+  <div class="panel-body">
+    <h2><strong>RAM</strong><h2>
+    <canvas id="ramChart" width="200" height="50"></canvas>
+ </div>
+</div>
+
+
+ <div class="panel panel-default">
+  <div class="panel-body">
+    <h2><strong>Disk MB/s</strong><h2>
+    <canvas id="iobyteChart" width="200" height="50"></canvas>
+ </div>
+</div>  
+
+ <div class="panel panel-default">
+  <div class="panel-body">
+    <h2><strong>Disk IO/s</strong><h2>
+    <canvas id="iopsChart" width="200" height="50"></canvas>
+ </div>
+</div> 
+
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h2><strong>Network Traffic</strong><h2>
+    <canvas id="networkbyChart" width="200" height="50"></canvas>
+ </div>
+</div>   
+
+
+ <script type="text/javascript">   
+
+
+///////////////////////////// cpu //////////////////////////////////////
+
+function drawChartCpu(datacpuObj) {
+    var ctx = document.getElementById("cpuChart");
+    var data = {
+        labels: datacpuObj.labels,
+        datasets: [
+            {
+                label: "cpu %",
+                lineTension: 0,
+                backgroundColor: "rgba(0,255,0,1)",
+                borderWidth : 1,
+                borderColor: "rgba(0,255,0,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(0,255,0,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 0,
+                pointHoverRadius: 5,
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 0,
+                pointRadius: 0,
+                pointHitRadius: 0,
+                data: datacpuObj.data,
+                spanGaps: true,
+            }
+        ]
+    };
+    var cpu = new Chart.Line(ctx, {
+        data: data,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+function drawChartRam(dataramObj) {
+    var ctx = document.getElementById("ramChart");
+    var data = {
+        labels: dataramObj.labels,
+        datasets: [
+            {
+                label: "ram %",
+                lineTension: 0,
+                backgroundColor: "rgba(75,192,192,1)",
+                borderWidth : 1,
+                borderColor: "rgba(75,192,192,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 0,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 0,
+                pointRadius: 0,
+                pointHitRadius: 0,
+                data: dataramObj.data,
+                spanGaps: false,
+            }
+        ]
+    };
+    var ram = new Chart.Line(ctx, {
+        type: 'line',
+        data: data,
+        options: {  
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+
+function drawChartIoByte(dataiobyteObj) {
+    var ctx = document.getElementById("iobyteChart");
+    var data = {
+        labels: dataiobyteObj.labels,
+        datasets: [
+            {
+                label: "MB read/s ",
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,255,0,1)",
+                borderWidth : 1,
+                borderColor: "rgba(0,255,0,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 0,
+                pointHoverRadius: 0,
+                pointHoverBackgroundColor: "rgba(0,255,0,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 0,
+                pointRadius: 0,
+                pointHitRadius: 0,
+                data: dataiobyteObj.read.data,
+                spanGaps: false,
+            },
+            {
+                label: "MB write/s",
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(255,0,0,1)",
+                borderWidth : 1,
+                borderColor: "rgba(255,0,0,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(255,0,0,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 0,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(0,255,0,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 0,
+                pointRadius: 0,
+                pointHitRadius: 0,
+                data: dataiobyteObj.write.data,
+                spanGaps: false,
+            }            
+        ]
+    };
+    var iobyte = new Chart(ctx, 
+        {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        }
+    );
+}
+
+function drawChartNet(datanetworkbyteObj) {
+    var ctx = document.getElementById("networkbyChart");
+    var data = {
+        labels: datanetworkbyteObj.labels,
+        datasets: [
+            {
+                label: "out KB/s",
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(255,0,0,1)",
+                borderWidth : 1,
+                borderColor: "rgba(255,0,0,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 0,
+                pointHoverRadius: 0,
+                pointHoverBackgroundColor: "rgba(255,0,0,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 0,
+                pointRadius: 0,
+                pointHitRadius: 0,
+                data: datanetworkbyteObj.tx.data,
+                spanGaps: true,
+            },
+            {
+                label: "in KB/s",
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,255,0,1)",
+                borderWidth : 1,
+                borderColor: "rgba(0,255,0,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(0,255,0,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 0,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(0,255,0,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 0,
+                pointRadius: 0,
+                pointHitRadius: 0,
+                data: datanetworkbyteObj.rx.data,
+                spanGaps: true,
+            }            
+        ]
+    };
+    var networkbyte = new Chart(ctx, 
+        {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        }
+    );
+}
+
+
+function drawChartIops(dataiopsObj) {
+    var ctx = document.getElementById("iopsChart");
+    var data = {
+        labels: dataiopsObj.labels,
+        datasets: [
+            {
+                label: "read",
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,255,0,1)",
+                borderWidth : 1,
+                borderColor: "rgba(0,255,0,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 0,
+                pointHoverRadius: 0,
+                pointHoverBackgroundColor: "rgba(0,255,0,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 0,
+                pointRadius: 0,
+                pointHitRadius: 0,
+                data: dataiopsObj.read.data,
+                spanGaps: true,
+            },
+            {
+                label: "write",
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(255,0,0,1)",
+                borderWidth : 1,
+                borderColor: "rgba(255,0,0,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(255,0,0,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 0,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(0,255,0,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 0,
+                pointRadius: 0,
+                pointHitRadius: 0,
+                data: dataiopsObj.write.data,
+                spanGaps: true,
+            }            
+        ]
+    };
+    var iops = new Chart(ctx, 
+        {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        }
+    );
+}
+
+var datacpuObj = {
+    labels: [],
+    data: []
+};
+
+var dataramObj = {
+    labels: [],
+    data: []
+};
+
+var dataiobyteObj = {
+    labels: [],
+    read: {
+        data : [],
+    },
+    write: {
+        data : [],
+    }    
+};
+
+var datanetworkbyteObj = {
+    labels: [],
+    tx: {
+        data : [],
+    },
+    rx: {
+        data : [],
+    }    
+};
+
+
+var dataiopsObj = {
+    labels: [],
+    read: {
+        data : [],
+    },
+    write: {
+        data : [],
+    }    
+};
+drawChartCpu(datacpuObj);
+drawChartRam(dataramObj);
+drawChartIoByte(dataiobyteObj);
+drawChartNet(datanetworkbyteObj);
+drawChartIops(dataiopsObj);
+
+$(document).ready(function(){
+
+
+
+
+    setInterval(function(){ callAjax(); }, 5000);
+
+
+    function callAjax()
+    {
+
+        $.ajax({
+                url: "{% url "ContainerBoard" %}/monitor/{{ return_value.id }}",
+                success: function(result){
+                    result_decode = jQuery.parseJSON(result);
+
+                    time = result_decode.time;
+                    cpu_pct = result_decode.cpu.cpu_usage_perct;
+                    ram_pct = result_decode.ram.ram_usage_pect;
+
+                    iops_read = result_decode.blockio.total_read_io_per_second;
+                    iops_write = result_decode.blockio.total_write_io_per_second;
+
+                    io_byte_read =  result_decode.blockio.total_read_byte_per_second
+                    io_byte_write =  result_decode.blockio.total_write_byte_per_second
+
+                    iops_read =  result_decode.blockio.total_read_io_per_second 
+                    iops_write =  result_decode.blockio.total_write_io_per_second                    
+
+                    total_rx =  result_decode.networks.total_rx_per_second/1024  
+                    total_tx =  result_decode.networks.total_tx_per_second/1024            
+
+                    datacpuObj.labels.push(time)
+                    datacpuObj.data.push(cpu_pct)
+
+                    dataramObj.labels.push(time)
+                    dataramObj.data.push(ram_pct)
+
+
+                    dataiobyteObj.labels.push(time)
+                    dataiobyteObj.read.data.push(io_byte_read/1024/1024)
+                    dataiobyteObj.write.data.push(io_byte_write/1024/1024) 
+
+                    datanetworkbyteObj.labels.push(time)
+                    datanetworkbyteObj.rx.data.push(total_rx)
+                    datanetworkbyteObj.tx.data.push(total_tx)
+
+                    dataiopsObj.labels.push(time)
+                    dataiopsObj.read.data.push(iops_read)
+                    dataiopsObj.write.data.push(iops_write)                    
+
+                    drawChartCpu(datacpuObj);
+                    drawChartRam(dataramObj);
+                    drawChartNet(datanetworkbyteObj);
+                    drawChartIoByte(dataiobyteObj);
+                    drawChartIops(dataiopsObj);
+
+                }
+        });
+                 
+
+    }        
+           
+
+    
+});
+
+</script> 
+
+
+{% endblock %}

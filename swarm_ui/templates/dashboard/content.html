@@ -1,0 +1,39 @@
+
+
+{% block contentheader %}
+  {% include  "dashboard/content_header.html" %}
+{% endblock %}
+    
+<section class="content">
+{% block contentinfobox %}
+  {% include  "dashboard/content_info_box.html" %}
+{% endblock %}
+
+{% block contentchar %}
+  {% include  "dashboard/content_char.html" %}
+{% endblock %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Cluster Controller</h3>
+            </div>
+            <div class="box-body">
+              <div class="table-responsive">
+                <table class="table no-margin">
+                  <tbody>
+                    <thead> <tr> <th><font color="#A9D0F5">Status</font></th> <th><button type="button" class="btn btn-success">Health</button></th> </tr> </thead>
+                    <thead> <tr> <th><font color="#A9D0F5">Role</font></th> <th>{{ swarm_role }}</th> </tr> </thead>
+                    <thead> <tr> <th><font color="#A9D0F5">Strategy</font></th> <th>{{ swarm_strategy }}</th> </tr> </thead>
+                    <thead> <tr> <th><font color="#A9D0F5">Swarm Manager</font></th> <th>{{ swarm_manager }}</th> </tr> </thead>
+                    <thead> <tr> <th><font color="#A9D0F5">Swarm Version</font></th> <th>{{ swarm_version }}</th> </tr> </thead>
+                    <thead> <tr> <th><font color="#A9D0F5">Cluser Store</font></th> <th>consul://{{ consul_manager }}</th> </tr> </thead>
+                    <thead> <tr> <th><font color="#A9D0F5">Filters</font></th> <th>{{ swarm_filters }}</th> </tr> </thead>                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>

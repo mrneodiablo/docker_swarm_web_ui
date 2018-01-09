@@ -1,0 +1,398 @@
+{% extends "dashboard/index.html" %} 
+
+ 
+{% block content %}
+
+    <section class="content-header">
+      <h1>
+        Containers
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-cubes"></i> Home</a></li>
+        <li><a href="{% url "ContainerBoard" %}">Containers</a></li>
+        <li class="active">{{ return_value.name }}</li>
+      </ol>
+    </section>
+<section class="content">
+ <div class="panel panel-default">
+  <div class="panel-body">
+  <div class="row show-grid">
+    <div class="col-md-6" >
+      {% if return_value.state.status == "running" %}
+          <font size="5"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color: green;"></span><strong>    {{ return_value.name }}</strong></font>              
+      {% elif return_value.state.status == "paused" %} 
+          <font size="5"><span class="glyphicon  glyphicon-pause" aria-hidden="true" style="color: #F4D03F;"></span><strong>    {{ return_value.name }}</strong></font> 
+      {% elif return_value.state.status == "exited" %} 
+          <font size="5"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color: #CB0404;"></span><strong>    {{ return_value.name }}</strong></font>
+      {% elif return_value.state.status == "created" %} 
+          <font size="5"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="color: #A9CCE3;"></span><strong>    {{ return_value.name }}</strong></font> 
+      {% endif %}                     
+    </div>
+
+<form method="post">{% csrf_token %}
+
+    <div class="col-md-6" >
+      {% if "1" in request.session.permission or "2" in request.permission.session %}
+        <div class="btn-group">
+          {% if return_value.state.status == "running" %}
+              <button type="submit" name="stop" value="stop" class="btn btn-warning" aria-expanded="true" aria-controls="collapseOne"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop</button>
+          {% endif %}
+        </div>
+
+        <div class="btn-group">
+          {% if return_value.state.status == "running" %}  
+            <button type="submit" name="pause" value="pause"  class="btn btn-info" aria-expanded="true" aria-controls="collapseOne"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span> Pause</button>
+          {% elif  return_value.state.status == "paused" %}
+             <button type="submit" name="unpause" value="unpause"  class="btn btn-info"  aria-expanded="true" aria-controls="collapseOne"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Unpause</a>
+          {% endif %}
+        </div>
+
+        <div class="btn-group">
+          <button type="submit" name="restart" value="restart" class="btn btn-success"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Restart</button>
+        </div>
+
+        <div class="btn-group">
+              <a a href="" data-toggle="modal" data-target="#{{ return_value.config.id }}_remove" class="btn btn-danger" aria-expanded="true" aria-controls="collapseOne"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove</a>
+        </div>
+
+        <div class="btn-group">
+          <a href="" data-toggle="modal" data-target="#{{ return_value.config.id }}_rename" class="btn btn-primary"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Rename</a>
+        </div>
+      {% endif %}
+    </div>  
+  </div>
+</form>
+
+
+<!-- Modal Process container-->
+  <div class="modal fade bs-example-modal-lg" id="process_container"  role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myLargeModalLabel">Process Container Name: {{ return_value.config.name }}</h4>
+        </div>
+        <div class="modal-body">
+    <div id="collapse9" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading9">
+      <table class="table table-bordered table-striped">
+          <thead> 
+              <tr> 
+                <th>User</th> 
+                <th>Pid</th> 
+                <th>%cpu</th> 
+                <th>%mem</th>
+                <th>vsz</th> 
+                <th>rss</th> 
+                <th>tty</th>
+                <th>Stat</th> 
+                <th>Start</th> 
+                <th>Time</th>
+                <th>Command</th>                
+              </tr> 
+          </thead>
+
+        <tbody>
+
+          {% for item in return_process_value.Processes %}
+            <tr>
+                      <td class="text-nowrap col-md-2">{{ item.0 }}</td> 
+                      <td class="text-nowrap col-md-2">{{ item.1 }}</td> 
+                      <td class="text-nowrap col-md-2">{{ item.2 }}</td> 
+                      <td class="text-nowrap col-md-2">{{ item.3 }}</td> 
+                      <td class="text-nowrap col-md-2">{{ item.4 }}</td> 
+                      <td class="text-nowrap col-md-2">{{ item.5 }}</td> 
+                      <td class="text-nowrap col-md-2">{{ item.6 }}</td> 
+                      <td class="text-nowrap col-md-2">{{ item.7 }}</td> 
+                      <td class="text-nowrap col-md-2">{{ item.8 }}</td> 
+                      <td class="text-nowrap col-md-2">{{ item.9 }}</td> 
+                      <td style="word-wrap: break-word;min-width: 200px;max-width: 200px;">{{  item.10 }}</td>  
+            <tr>
+          {% endfor %}       
+        </tbody>
+      </table>
+    </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Exit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Modal -->
+<form method="post">{% csrf_token %}
+  <div class="modal fade" id="{{ return_value.config.id }}_remove"  role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Remove Container Name: {{ return_value.config.name }}</h4>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to remove this container?</p>
+          </p>ID: <strong>{{ return_value.config.id }}</strong></p>
+          <div>
+              <label>Force:</label>
+              <input type="checkbox" name="force_remove_container" value="1" >
+          </div>
+          <div>
+              <label>Remove volumes:</label>
+              <input type="checkbox" name="force_remove_volume" value="1" >
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+          <button type="submit" class="btn btn-success" name="ok_remove" value="ok_remove" aria-expanded="true" aria-controls="collapseOne">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<form method="post">{% csrf_token %}
+  <div class="modal fade" id="{{ return_value.config.id }}_rename" role="dialog" aria-labelledby="myModalLabe222">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Rename Container Name: {{ return_value.config.name }}</h4>
+        </div>
+        <div class="modal-body">
+          <p>Current Name: {{ return_value.config.name }}</p>
+          <p>New Name: <input name="newname" class="form-control" type="text" placeholder="New Name" required></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+          <button type="submit" class="btn btn-success" name="ok_rename" value="{{ return_value.config.id }}" >Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>  
+
+<div class="row show-grid navbar">
+  <div style="margin-top: 7px; margin-left: 10px; ">
+    <div class="btn-group">
+      <a href="{% url "ContainerBoard" %}/chart/{{ return_value.config.id }}" role="button" class="btn btn-info">
+        <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> 
+        <span class="glyphicon-class">Monitor</span>
+      </a>
+    </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-info" data-toggle="modal" data-target="#process_container" >
+        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+        <span class="glyphicon-class">Process</span>
+      </button>
+    </div>    
+  </div>
+</div>
+
+
+
+<!------------------------------------------>
+<div class="row show-grid">
+  <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
+        <h4 class="text-primary page-header" style="margin-left: 15px"> Container Status</h4>   
+        <table class="table">
+          <thead> 
+              <tr> 
+                <th style="border: None">Created</th> 
+                <th style="border: None">Stated At</th> 
+                <th style="border: None">Restart Count</th> 
+              </tr> 
+          </thead>          
+            <tbody>
+                <tr style="border: None">
+                  <td class="text-nowrap col-md-4" style="border: None">{{ return_value.state.created_time }}</th>
+                  <td class="text-nowrap col-md-4" style="border: None">{{ return_value.state.started_at }}</th>
+                  <td class="text-nowrap col-md-4" style="border: None">{{ return_value.state.restart_count }}</th> 
+                </tr>
+            </tbody>
+        </table>
+  </div>
+</div>
+
+
+
+<div class="row show-grid">
+  <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 15px">Container Configuration</h4>
+      <table class="table">
+          <tbody>
+              <tr>
+                <th class="text-nowrap col-md-2" scope="row" style="border: None">ID</th> 
+                <td class="text-nowrap col-md-10" style="border: None">{{ return_value.config.id }}</th> 
+              </tr>
+              <tr>
+                <th class="text-nowrap col-md-2" scope="row" style="border: None">Image</th> 
+                <td class="text-nowrap col-md-10" style="border: None">{{ return_value.config.image_name }}</th> 
+              </tr>
+              <tr>
+                <th class="text-nowrap col-md-2" scope="row" style="border: None">Command</th> 
+                <td class="text-nowrap col-md-10" style="border: None">{% for key in return_value.config.cmd %} {{ key }} {% endfor %}</th> 
+              </tr>
+              <tr>
+                <th class="text-nowrap col-md-2" scope="row" style="border: None">Entrypoint</th> 
+                <td class="text-nowrap col-md-10" style="border: None">{% for key in return_value.config.entry_point %} {{ key }} {% endfor %}</th> 
+              </tr>
+              <tr>
+                <th class="text-nowrap col-md-2" scope="row" style="border: None">Restart Policy</th> 
+                <td class="text-nowrap col-md-10" style="border: None">{{ return_value.config.restart_policy }}</th> 
+              </tr>
+          </tbody>
+      </table>
+  </div>
+</div>
+
+
+<div class="row show-grid">
+  <div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 15px">Container Resources</h4>
+      <table class="table">
+          <tbody>
+              <tr>
+                <th class="text-nowrap col-md-2" style="border: None">Cpu Set</th> 
+                <td class="text-nowrap col-md-10" style="border: None">
+                  {% for key in return_value.resource.cpus_set_cpus %}{{ key }}{% endfor %}
+                </td>
+              </tr>
+              <tr>
+                <th class="text-nowrap col-md-2" style="border: None">Cpu Shares</th> 
+                <td class="text-nowrap col-md-10" style="border: None">
+                  {% for key in return_value.resource.cpu_shares %}{{ key }}{% endfor %}
+                </td> 
+              </tr>
+              <tr>
+                <th class="text-nowrap col-md-2" style="border: None">Memory Limit</th> 
+                <td class="text-nowrap col-md-10" style="border: None">{{ return_value.resource.memory_limit }} MB</th> 
+              </tr>
+              <tr>
+                <th class="text-nowrap col-md-2" style="border: None">Memory Swap</th> 
+                <td class="text-nowrap col-md-10" style="border: None">{{ return_value.resource.memory_swap }}  MB</th> 
+              </tr>              
+              <tr>
+                <th class="text-nowrap col-md-2" style="border: None">Memory Swappiness</th> 
+                <td class="text-nowrap col-md-10" style="border: None">{{ return_value.resource.memory_swappiness }}</th> 
+              </tr>
+              <tr>
+                <th class="text-nowrap col-md-2" style="border: None">Disk Quota</th> 
+                <td class="text-nowrap col-md-10" style="border: None">{{ return_value.resource.disk_quota }}</th> 
+              </tr>
+              <tr>
+                <th class="text-nowrap col-md-2" style="border: None">Devices</th> 
+                <td class="text-nowrap col-md-10" style="border: None">{{ return_value.config.devices }}</th> 
+              </tr>
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="row show-grid">
+  <div class="panel-group" id="accordion6" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 15px">Container Environment</h4>  
+      <table class="table">
+        <tbody>
+           {% for key in  return_value.environment %}
+              <tr><th class="text-nowrap col-md-12" style="border: None">{{key}}</th></tr>
+           {% endfor %}
+        </tbody>
+      </table>
+ </div>
+</div>
+
+
+<div class="row show-grid">
+  <div class="panel-group" id="accordion9" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 15px">Mount Point</h4>      
+      <table class="table">
+          <thead> 
+              <tr> 
+                <th style="border: None">Source</th> 
+                <th style="border: None">Destination</th>
+              </tr> 
+          </thead>
+        <tbody>
+          {% for item in return_value.mounts %}
+            <tr>
+              {% if item.Source %}                
+                {% for keys, values  in item.items %}
+                    {% if keys == "Source" %}
+                      <td style="border: None">{{ values }}</td> 
+                    {% endif %}
+                {% endfor %}
+              {% else %}
+                <td class="text-nowrap col-md-2"></td> 
+              {% endif %} 
+              
+
+            {% if item.Destination %}                          
+                {% for keys, values  in item.items %}
+                    {% if keys == "Destination" %}
+                      <td style="border: None">{{ values }}</td> 
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+              <td class="text-nowrap col-md-2" style="border: None"></td> 
+            {% endif %}     
+
+            <tr>
+          {% endfor %}
+       
+        </tbody>
+      </table>
+  </div>
+</div>
+
+
+
+<div class="row show-grid">
+  <div class="panel-group" id="accordion7" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 15px">Container Networks</h4>
+      <table class="table">
+          <thead> 
+              <tr> 
+                <th style="border: None">Name</th> 
+                <th style="border: None">IP</th> 
+                <th style="border: None">Gateway</th> 
+                <th style="border: None">Mac Address</th>  
+              </tr> 
+          </thead>
+          <tbody>
+            {% for key_mode, value_mode in return_value.network.mode.items %}
+                <tr>
+                  <td class="text-nowrap col-md-2" style="border: None">{{ key_mode }}</th>
+                  <td class="text-nowrap col-md-2" style="border: None">{{ value_mode.IPAddress }}/{{ value_mode.IPPrefixLen }}</th> 
+                  <td class="text-nowrap col-md-2" style="border: None">{{ value_mode.Gateway }}</th> 
+                  <td class="text-nowrap col-md-2" style="border: None">{{ value_mode.MacAddress }}</th> 
+                </tr>
+            {% endfor %}
+
+          </tbody>
+       </table>
+</div>
+</div>
+
+<div class="row show-grid">
+  <div class="panel-group" id="accordion4" role="tablist" aria-multiselectable="true">
+      <h4 class="text-primary page-header" style="margin-left: 15px">Node</h4>    
+      <table class="table">
+            <tbody>
+                <tr>
+                  <th class="text-nowrap col-md-2" scope="row" style="border: None">Name</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{{ return_value.node.name }}</th> 
+                </tr>
+                <tr>
+                  <th class="text-nowrap col-md-2" scope="row" style="border: None">Host</th> 
+                  <td class="text-nowrap col-md-10" style="border: None">{% for key in return_value.node.host %}{{ key }}{% endfor %}</th> 
+                </tr>
+            </tbody>
+        </table>
+  </div>
+</div>
+<!------------------------------------------>
+</div>
+</div>
+</section>
+{% endblock %}
+

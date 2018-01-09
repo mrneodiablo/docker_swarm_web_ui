@@ -1,0 +1,78 @@
+#!/bin/bash
+. /etc/rc.d/init.d/functions
+
+user="root"
+prog="swarm.join"
+exec="/gs2/swarm/$prog"
+pidfile="/gs2/swarm/$prog.pid"
+lockfile="/gs2/swarm/lock/subsys/$prog"
+logfile="/gs2/swarm/log/$prog"
+advertise="advertise"
+consul="consul"
+ip_host="10.40.89.113"
+ip_consul="10.40.89.11"
+port1="2375"
+port2="8500"
+host="MTO_DOCKER_HTCPG1_Server113"
+hearbeat="heartbeat"
+delay="delay"
+
+# pull in sysconfig settings
+[ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
+export GOMAXPROCS=${GOMAXPROCS:-2}
+start() {
+#    [ -x $exec ] || exit 5
+    
+#    [ -f $conffile ] || exit 6
+#    [ -d $confdir ] || exit 6
+
+    umask 077
+
+    touch $logfile $pidfile
+    chown $user:$user $logfile $pidfile
+    echo -n $"Starting $prog: "
+    daemon \
+        --pidfile=$pidfile \
+        --user=root \
+        " { $exec join --advertise=$ip_host:$port1 consul://$ip_consul:$port2 &>> $logfile & } ; echo \$! >| $pidfile "
+    
+    RETVAL=$?
+    echo
+    
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stop $prog: "
+    killproc -p $pidfile $exec -HUP
+    echo
+}
+
+rh_status() {
+    status -p "$pidfile" -l $prog $exec
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
+
+case "$1" in
+    start)
+        rh_status_q && exit 0
+        $1
+        ;;
+    stop)
+        rh_status_q || exit 7
+        $1
+        ;;
+    status)
+        rh_status
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status}"
+        exit 2
+esac
+
+exit $?

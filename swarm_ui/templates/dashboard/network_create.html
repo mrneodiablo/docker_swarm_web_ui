@@ -1,0 +1,190 @@
+
+{% extends "dashboard/index.html" %} 
+
+
+{% block content %}
+
+{% load staticfiles %}
+<link href="{% static "css/semantic.min.css" %}" rel="stylesheet">
+
+    <section class="content-header">
+      <h1>
+        Networks
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-cubes"></i> Home</a></li>
+        <li><a href="{% url "NetworksBoard" %}">Networks</a></li>
+        <li class="active">Create</li>
+      </ol>
+    </section>
+
+
+<div class="panel-body" style="margin-top: 50px">
+        <div  class="ui bottom attached active tab segment">
+            <div class="ui form" >
+               <form  action="{% url "NetworksCreate" %}"  method="POST"   data-toggle="validator" validate>{% csrf_token %}
+                <h3 class="ui header">Create Networks</h3>
+                <div class="ui two column grid">
+                    <div class="column">
+                        <div class="ui horizontal segment">
+                            <h5 class="ui dividing header">Netwok Configuration</h5>
+                            <div class="two fields">
+                                <div class="field">
+                                    <label>Networks Name</label>
+                                    <div class="ui corner labeled input">
+                                        <input name="name" class="input ng-pristine ng-valid ng-touched" type="text" placeholder="Name" required>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label>Driver</label>
+                                    <select class="form-control"  name="driver">
+                                        {% for  list_driver in return_list_driver %}
+                                             <option value="{{ list_driver.driver }}">{{ list_driver.driver }}</option> 
+                                        {% endfor %}
+                                    </select>    
+                                </div>
+                            </div>
+
+                           <h5 class="ui dividing header">Options Configuration</h5>
+                            <div class="fields ng-scope">
+                                <div class=" col-md-9">
+                                    <div class="ui corner labeled input" >
+                                        <p style="margin-top: 10px;"><strong>com.docker.network.bridge.enable_icc</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class=" col-md-3">
+                                    <select class="form-control"  name="enable_icc">
+                                        <option value="true">True</option>
+                                        <option value="false" selected="selected">False</option> 
+                                    </select>    
+                                </div>
+                            </div>
+                            <div class="fields ng-scope">
+                                <div class=" col-md-9">
+                                    <div class="ui corner labeled input" >
+                                        <p style="margin-top: 10px;"><strong>com.docker.network.bridge.enable_ip_masquerade</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class=" col-md-3">
+                                    <select class="form-control"  name="enable_ip_masquerade">
+                                        <option value="true" selected="selected">True</option>
+                                        <option value="false">False</option> 
+                                    </select>    
+                                </div>
+                            </div>
+
+                            <div class="fields ng-scope" >
+                                <div class=" col-md-8">
+                                    <div class="ui corner labeled input" >
+                                        <p style="margin-top: 10px;"><strong>com.docker.network.bridge.host_binding_ipv4</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class=" col-md-4">
+                                    <input name="host_binding_ipv4" class="input ng-pristine ng-valid ng-touched" type="text" placeholder="0.0.0.0">   
+                                </div>
+                            </div>
+                            <div class="fields ng-scope" >
+                                <div class=" col-md-8">
+                                    <div class="ui corner labeled input" >
+                                        <p style="margin-top: 10px;"><strong>com.docker.network.driver.mtu</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class=" col-md-4">
+                                    <input name="driver_mtu" class="input ng-pristine ng-valid ng-touched" type="text" placeholder="1500"> 
+                                </div>
+                            </div>
+
+                            <h5 class="ui dividing header">CheckDuplicate</h5>
+                            <div class="field">
+                                <div class="ui toggle checkbox">
+                                    <input type="checkbox" id="CheckDuplicate"  class="ng-pristine ng-untouched ng-valid" name="check_duplicate" value="1">
+                                    <label for="CheckDuplicate">Requests daemon to check for networks with same name
+                                    </label>
+                                    <br>
+                                </div>
+                            </div>
+                            <h5 class="ui dividing header">Internal</h5>
+                            <div class="field">
+                                <div class="ui toggle checkbox">
+                                    <input type="checkbox" id="Internal"  class="ng-pristine ng-untouched ng-valid" name="internal" value="1">
+                                    <label for="Internal">Restrict external access to the network
+                                    </label>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="ui horizontal ">
+                            <h5 class="ui dividing header">IPAM Configure</h5>
+                            <div class="field">
+                                <label>Subnet</label>
+                                <input name="subnet" class="input ng-pristine ng-untouched ng-valid" type="text"  placeholder="Subnet"> 
+                            </div>
+                            <div class="field">
+                                <label>IPRange</label>
+                                <input name="iprange" class="input ng-pristine ng-untouched ng-valid" type="text"  placeholder="IPRange"> 
+                            </div>
+                            <div class="field">
+                                <label>Gateway</label>
+                                <input name="gateway" class="input ng-pristine ng-untouched ng-valid" type="text"  placeholder="Gateway"> 
+                            </div>
+                            <h5 class="ui dividing header">Labels Configure</h5>
+                            <div class="fields">
+                                <div class="seven wide field">
+                                    <label>Key</label>
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="label_key_1" placeholder="Key">
+                                </div>
+                                <div class="eight wide field">
+                                    <label>Value</label>
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="label_value_1" n placeholder="value">
+                                </div>
+                            </div>
+                            <div class="fields ng-scope" ng-repeat="v in vm.envVars">
+                                <div class="seven wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="label_key_2" placeholder="Key">
+                                </div>
+                                <div class="eight wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="label_value_2" placeholder="Value">
+                                </div>
+                            </div>
+                            <div class="fields ng-scope" ng-repeat="v in vm.envVars">
+                                <div class="seven wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="label_key_3" placeholder="Key">
+                                </div>
+                                <div class="eight wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="label_value_3" placeholder="Value">
+                                </div>
+                            </div>
+                            <h5 class="ui dividing header">EnableIPv6</h5>
+                            <div class="field">
+                                <div class="ui toggle checkbox">
+                                    <input type="checkbox" id="EnableIPv6" class="ng-pristine ng-untouched ng-valid" name="enableipv6" value="1">
+                                    <label for="EnableIPv6">Enable IPv6 on the network
+                                    </label>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin: 0 0 20px 15px;">
+                        <button type="submit" class="btn btn-success" name="ok_create"  value="ok_create" >Create</button> 
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+</div>
+
+
+
+
+
+
+
+{% endblock %}

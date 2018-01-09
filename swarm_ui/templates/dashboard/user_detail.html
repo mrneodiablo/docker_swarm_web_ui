@@ -1,0 +1,176 @@
+{% extends "dashboard/index.html" %} 
+
+ 
+{% block content %}
+    <section class="content-header">
+      <h1>
+        Users
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url "DashBoard" %}"><i class="fa fa-user"></i> Home</a></li>
+        <li><a href="{% url "UserBoard" %}">User</a></li>
+        <li class="active">{% for value in return_value %}{{ value.username }}{% endfor %}</li>
+      </ol>
+    </section>
+    <section class="content">
+     <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="col-md-12">
+          {% for value in return_value %}
+              <form class="form-inline" method="post"  data-toggle="validator" validate>{% csrf_token %}
+              <div>    
+                <div class="input-group">
+                  <div>User Name</div>
+                  <input type="text" class="form-control" placeholder="Username" name="username" value="{{ value.username }}">
+                </div>
+              </div>
+              <br>
+              <div>  
+                <div class="input-group">
+                  <div>First Name</div>
+                  <input type="text" class="form-control" placeholder="First Name" name="firstname" value="{{ value.first_name }}">
+                </div>
+              </div>
+              <br>
+              <div>   
+                <div class="input-group">
+                  <div>Last Name</div>
+                  <input type="text" class="form-control" placeholder="Last Name" name="lastname" value="{{ value.last_name }}">
+                </div>
+              </div>
+              <br>
+              <div>   
+                <div class="input-group">
+                  <div>Password</div>
+                  <input type="password" class="form-control" placeholder="Password"  name="password" >
+                </div>
+              </div>
+              <br>
+              <div>
+                <div>Permission</div>
+                <table class="table table-striped  table-bordered ng-scope" >
+                  <thead style="font-size: 12px">
+                      <tr class="table-striped" >
+                          <th>Administrator</th>
+                          <th>Container Admin</th>
+                          <th>Container Read only</th>
+                          <th>Network Admin</th>
+                          <th>Network Read only</th>
+                          <th>Images Admin</th>
+                          <th>Images Read only</th>
+                          <th>Node Admin</th>
+                          <th>Node Read only</th>
+                          <th>Volumes Admin</th>
+                          <th>Volumes Read only</th>                      
+                          <th>User Admin</th>
+                          <th>User Read only</th>
+                          <th>Log Admin</th>
+                      </tr>
+                  </thead>
+                  <tbody >
+                      <tr class="ng-scope">
+                            {% if "1" in  value.permission %}
+                                <td><input type="checkbox" name="administrator" value="1" checked></td>
+                            {% elif "1"  not in  value.permission %}
+                                 <td><input type="checkbox" name="administrator" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "2" in  value.permission %}
+                                <td><input type="checkbox" name="container_admin" value="1" checked></td>
+                            {% elif "2"  not in  value.permission %}
+                                 <td><input type="checkbox" name="container_admin" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "7" in  value.permission %}
+                                <td><input type="checkbox" name="container_read_only" value="1" checked></td>
+                            {% elif "7"  not in  value.permission %}
+                                 <td><input type="checkbox" name="container_read_only" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "5" in  value.permission %}
+                                <td><input type="checkbox" name="network_admin" value="1" checked></td>
+                            {% elif "5"  not in  value.permission %}
+                                 <td><input type="checkbox" name="network_admin" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "10" in  value.permission %}
+                                <td><input type="checkbox" name="network_read_only" value="1" checked></td>
+                            {% elif "10"  not in  value.permission %}
+                                 <td><input type="checkbox" name="network_read_only" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "6" in  value.permission %}
+                                <td><input type="checkbox" name="image_admin" value="1" checked></td>
+                            {% elif "6"  not in  value.permission %}
+                                 <td><input type="checkbox" name="image_admin" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "11" in  value.permission %}
+                                <td><input type="checkbox" name="image_read_only" value="1" checked></td>
+                            {% elif "11"  not in  value.permission %}
+                                 <td><input type="checkbox" name="image_read_only" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "3" in  value.permission %}
+                                <td><input type="checkbox" name="node_admin" value="1" checked></td>
+                            {% elif "3"  not in  value.permission %}
+                                 <td><input type="checkbox" name="node_admin" value="1"></td>                   
+                            {% endif %}
+
+
+                            {% if "8" in  value.permission %}
+                                <td><input type="checkbox" name="node_read_only" value="1" checked></td>
+                            {% elif "8"  not in  value.permission %}
+                                 <td><input type="checkbox" name="node_read_only" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "4" in  value.permission %}
+                                <td><input type="checkbox" name="volume_admin" value="1" checked></td>
+                            {% elif "4"  not in  value.permission %}
+                                 <td><input type="checkbox" name="volume_admin" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "9" in  value.permission %}
+                                <td><input type="checkbox" name="volume_read_only" value="1" checked></td>
+                            {% elif "9"  not in  value.permission %}
+                                 <td><input type="checkbox" name="volume_read_only" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "12" in  value.permission %}
+                                <td><input type="checkbox" name="user_admin" value="1" checked></td>
+                            {% elif "12"  not in  value.permission %}
+                                 <td><input type="checkbox" name="user_admin" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "13" in  value.permission %}
+                                <td><input type="checkbox" name="user_read_only" value="1" checked></td>
+                            {% elif "13"  not in  value.permission %}
+                                 <td><input type="checkbox" name="user_read_only" value="1"></td>                   
+                            {% endif %}
+
+                            {% if "14" in  value.permission %}
+                                <td><input type="checkbox" name="log_admin" value="1" checked></td>
+                            {% elif "14"  not in  value.permission %}
+                                 <td><input type="checkbox" name="log_admin" value="1"></td>                   
+                            {% endif %}                                          
+                      <tr>
+                      
+                   </tbody>
+                  </table>      
+              </div>
+                <div style="margin: 0 0 20px 15px;">
+                    <button type="submit" class="btn btn-success" name="ok_update"  value="{{ value.user_id }}" >update</button> 
+                </div>
+                  {% endfor %}                                          
+              </form> 
+        </div>        
+    </div>
+    </section>
+
+
+
+<!------------------------------------------>
+</div>
+
+{% endblock %}
+

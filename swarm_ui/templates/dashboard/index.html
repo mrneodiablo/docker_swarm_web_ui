@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% block header %}
+  {% include  "dashboard/header.html" %}
+{% endblock %}
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+{% block headerbar %}
+  {% include  "dashboard/header_bar.html" %}
+{% endblock %}
+
+  <aside class="main-sidebar">
+      {% block sidebar %}
+        {% include  "dashboard/side_bar.html" %}
+      {% endblock %}
+  </aside>
+
+
+  <div class="content-wrapper">
+    {% block content %}
+      {% include  "dashboard/content.html" %}
+    {% endblock %}
+  </div>
+
+</div>
+
+{% block script %}
+  {% include  "dashboard/script.html" %}
+{% endblock %}
+</body>
+</html>

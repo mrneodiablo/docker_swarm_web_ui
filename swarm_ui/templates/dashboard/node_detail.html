@@ -1,0 +1,76 @@
+{% extends "dashboard/index.html" %} 
+
+
+{% block content %}
+<section class="content-header">
+      <h1>
+        Nodes
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-server"></i> Home</a></li>
+        <li><a href="{% url "NodeBoard" %}">Nodes</a></li>
+        <li class="active">{% for value in return_value %}{{ value.name }}{% endfor %}</li>
+      </ol>
+</section>
+<section class="content-header">
+  <div class="panel-body" > 
+{% for value in return_value %}
+    <a class="list-group-item active">
+      <h5 class="list-group-item-heading " style="color:#DDDBDA;"><strong>Name</strong></h4>
+      <p class="list-group-item-text">{{ value.name }}</p>
+    </a>  
+
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>id</strong></h4>
+      <p class="list-group-item-text">{{ value.id }}</p>
+    </a>
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>ip</strong></h4>
+      <p class="list-group-item-text">{{ value.ip }}</p>
+    </a>
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>Cpus</strong></h4>
+      <p class="list-group-item-text">{{ value.cpus }}</p>
+    </a>
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>Memory</strong></h4>
+      <p class="list-group-item-text">{{ value.ram }}</p>
+    </a>
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>Containers</strong></h4>
+      <p class="list-group-item-text">{{ value.containers }}</p>
+    </a>
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>Version Docker</strong></h4>
+      <p class="list-group-item-text">{{ value.serverversion }}</p>
+    </a>
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>Operating System</strong></h4>
+      <p class="list-group-item-text">{{ value.operatingsystem }}</p>
+    </a>  
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>Kernel</strong></h4>
+      <p class="list-group-item-text">{{ value.kernelversion }}</p>
+    </a> 
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>Storage Driver</strong></h4>
+      <p class="list-group-item-text">{{ value.storagedriver }}</p>
+    </a> 
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>Execution driver</strong></h4>
+      <p class="list-group-item-text">{{ value.executiondriver }}</p>
+    </a>
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>Update Time</strong></h4>
+      <p class="list-group-item-text">{{ value.updatedat }}</p>
+    </a>
+    <a class="list-group-item ">
+      <h5 class="list-group-item-heading" style="color:#DDDBDA;"><strong>Startus</strong></h4>
+      <p class="list-group-item-text"><span class="label {% if value.status == "Pending" %} label-default {% elif value.status == "Unhealthy"  %} label-danger {% elif value.status == "Healthy" %}  label-success {% endif %}">{{ value.status }}</span></p>
+    </a>
+{% endfor %}                                  
+</div>
+</section>  
+
+{% endblock %}
+

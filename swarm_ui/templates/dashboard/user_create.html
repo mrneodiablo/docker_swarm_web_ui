@@ -1,0 +1,110 @@
+{% extends "dashboard/index.html" %} 
+
+ 
+{% block content %}
+<section class="content-header">
+  <h1>
+    Users
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url "DashBoard" %}"><i class="fa fa-user"></i> Home</a></li>
+    <li><a href="{% url "UserBoard" %}">Users</a></li>
+    <li class="active">Create</li>
+  </ol>
+</section>
+
+<section class="content">
+ <div class="panel">
+  <div class="panel-body">
+    <div class="row show-grid">
+      <div class="col-md-12" >
+          <h5 class="ui dividing header">Account Details</h5>
+      </div>  
+    </div>
+    <br>
+    <div class="col-md-12">
+          <form class="form-inline" method="post"  data-toggle="validator" validate>{% csrf_token %}
+          <div>    
+            <div class="input-group">
+              <div>User Name</div>
+              <input type="text" class="form-control" placeholder="Username" name="username" required>
+            </div>
+          </div>
+          <br>
+          <div>  
+            <div class="input-group">
+              <div>First Name</div>
+              <input type="text" class="form-control" placeholder="First Name" name="firstname">
+            </div>
+          </div>
+          <br>
+          <div>   
+            <div class="input-group">
+              <div>Last Name</div>
+              <input type="text" class="form-control" placeholder="Last Name" name="lastname">
+            </div>
+          </div>
+          <br>
+          <div>   
+            <div class="input-group">
+              <div>Password</div>
+              <input type="password" class="form-control" placeholder="Password"  name="password" required>
+            </div>
+          </div>
+          <br>
+          <div>
+            <div>Permission</div>
+            <table class="table table-striped  table-bordered ng-scope" >
+              <thead style="font-size: 12px">
+                  <tr class="table-striped" >
+                      <th>Administrator</th>
+                      <th>Container Admin</th>
+                      <th>Container Read only</th>
+                      <th>Network Admin</th>
+                      <th>Network Read only</th>
+                      <th>Images Admin</th>
+                      <th>Images Read only</th>
+                      <th>Node Admin</th>
+                      <th>Node Read only</th>
+                      <th>Volumes Admin</th>
+                      <th>Volumes Read only</th>                      
+                      <th>User Admin</th>
+                      <th>User Read only</th>
+                      <th>Log Admin</th>
+                  </tr>
+              </thead>
+              <tbody >
+                  <tr class="ng-scope">
+                      <td><input type="checkbox" name="administrator" value="1"></td>
+                      <td><input type="checkbox" name="container_admin" value="1" ></td>
+                      <td><input type="checkbox" name="container_read_only" value="1" checked></td>
+                      <td><input type="checkbox" name="network_admin" value="1"></td>
+                      <td><input type="checkbox" name="network_read_only" value="1" checked></td>
+                      <td><input type="checkbox" name="image_admin" value="1"></td>
+                      <td><input type="checkbox" name="image_read_only" value="1" checked></td>
+                      <td><input type="checkbox" name="node_admin" value="1"></td>
+                      <td><input type="checkbox" name="node_read_only" value="1" checked></td>
+                      <td><input type="checkbox" name="volume_admin" value="1"></td>
+                      <td><input type="checkbox" name="volume_read_only" value="1" checked></td>  
+                      <td><input type="checkbox" name="user_admin" value="1"></td>
+                      <td><input type="checkbox" name="user_read_only" value="1" checked></td>
+                      <td><input type="checkbox" name="log_admin" value="1" ></td>                                           
+                  <tr>
+               </tbody>
+              </table>      
+          </div>
+            <div style="margin: 0 0 20px 15px;">
+                <button type="submit" class="btn btn-success" name="ok_create"  value="ok_create" >Create</button> 
+            </div>                                      
+          </form>
+    </div>        
+  </div>
+</section>
+
+
+
+<!------------------------------------------>
+</div>
+
+{% endblock %}
+

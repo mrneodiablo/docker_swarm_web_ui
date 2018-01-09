@@ -1,0 +1,117 @@
+
+{% extends "dashboard/index.html" %} 
+
+
+{% block content %}
+
+{% load staticfiles %}
+<link href="{% static "css/semantic.min.css" %}" rel="stylesheet">
+
+
+<div class="panel-body" style="margin-top: 50px">
+<ol class="breadcrumb">
+  <li><a href="{% url "DashBoard" %}">DashBoard</a></li>
+  <li><a href="{% url "VolumesBoard" %}">Volumes</a></li>
+  <li class="active">Create</li>
+</ol>
+        <div  class="ui bottom attached active tab segment">
+            <div class="ui form" >
+                <form  action="{% url "VolumesCreate" %}"  method="POST"   data-toggle="validator" validate>{% csrf_token %}
+                <h3 class="ui header">Create Volume</h3>
+                <div class="ui one column grid">
+                    
+                    <div class="column">
+                        <div class="ui horizontal segment">
+                            <h5 class="ui dividing header"></h5>
+                            <div class="two fields">
+                                <div class="field">
+                                    <label>Name</label>
+                                    <div class="ui corner labeled input">
+                                        <input class="form-control" type="text"  placeholder="Name Volume" name="volume_name" name="volume_name" required>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label>Driver</label>
+                                      <select class="form-control" id="sel1" name="volume_driver">
+                                        {% for list_driver in return_list_driver %}
+                                          <option value="{{ list_driver.driver }}">{{ list_driver.driver }}</option>
+                                        {% endfor %}
+                                      </select>
+                                </div>
+                            </div>
+
+
+                      <h5 class="ui dividing header">Labels Configure</h5>
+                            <div class="fields">
+                                <div class="seven wide field col-md-4">
+                                    <label>Key</label>
+                                    <input class="input ng-pristine ng-untouched ng-valid " type="text" name="label_key_1" placeholder="Key">
+                                </div>
+                                <div class="eight wide field">
+                                    <label>Value</label>
+                                    <input class="input ng-pristine ng-untouched ng-valid col-md-4" type="text" name="label_value_1" n placeholder="value">
+                                </div>
+                            </div>
+                            <div class="fields ng-scope" ng-repeat="v in vm.envVars">
+                                <div class="seven wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="label_key_2" placeholder="Key">
+                                </div>
+                                <div class="eight wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="label_value_2" placeholder="Value">
+                                </div>
+                            </div>
+                            <div class="fields ng-scope" ng-repeat="v in vm.envVars">
+                                <div class="seven wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="label_key_3" placeholder="Key">
+                                </div>
+                                <div class="eight wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="label_value_3" placeholder="Value">
+                                </div>
+                            </div>
+
+                      <h5 class="ui dividing header">DriverOpts</h5>
+                            <div class="fields">
+                                <div class="seven wide field">
+                                    <label>Key</label>
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="opt_key_1" placeholder="Key">
+                                </div>
+                                <div class="eight wide field">
+                                    <label>Value</label>
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="opt_value_1" n placeholder="value">
+                                </div>
+                            </div>
+                            <div class="fields ng-scope" ng-repeat="v in vm.envVars">
+                                <div class="seven wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="opt_key_2" placeholder="Key">
+                                </div>
+                                <div class="eight wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="opt_value_2" placeholder="Value">
+                                </div>
+                            </div>
+                            <div class="fields ng-scope" ng-repeat="v in vm.envVars">
+                                <div class="seven wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="opt_key_3" placeholder="Key">
+                                </div>
+                                <div class="eight wide field">
+                                    <input class="input ng-pristine ng-untouched ng-valid" type="text" name="opt_value_3" placeholder="Value">
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div style="margin: 0 0 20px 15px;">
+                        <button type="submit" class="btn btn-success" name="ok_create"  value="ok_create" >Create</button> 
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+</div>
+
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "dashboard/index.html" %} 
+
+
+{% block content %}
+
+{% load staticfiles %}
+<script  type="text/javascript" src="{% static "js/docker_action.js" %}"></script>
+
+<section class="content-header">
+  <h1>
+    Logs
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{% url "DashBoard" %}"><i class="fa fa-user"></i> Home</a></li>
+  <li class="active">Logs</li>
+  </ol>
+</section>
+
+<section class="content-header">   
+    <div class="panel-body"> 
+      <form class="navbar-form " action=""  method="POST" name="find" novalidate>{% csrf_token %}
+        <div class="form-group col-md-3" >
+          <strong>USER</strong>
+          <select class="form-control" name="username">
+            <option value="all">All</option>
+            {% for value in user_filter %}
+              <option value="{{ value.username }}">{{ value.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group col-md-3" >
+          <strong>FUNCTION</strong>
+          <select class="form-control" name="function">
+            <option value="all">All</option>
+            {% for value in function_filter %}
+              <option value="{{ value.feature }}">{{ value.feature }}</option>
+            {% endfor %}
+          </select>
+        </div> 
+        <div class="form-group col-md-5" >
+          <strong>DATE</strong>
+            <input type="date" class="form-control"  name="date">
+        </div>
+         <div class="form-group col-md-1" >
+          <button type="submit" class="btn btn-info" name="ok_filter" value="yes"><span class="glyphicon glyphicon-filter" aria-hidden="true" >Filter</span></button>
+         </div>    
+      </form>
+    </div>
+</section>
+
+<section class="content">
+  <div class="panel">
+      <table class="table table-striped table-bordered">
+    <thead>
+        <tr align="center">
+            <th>id</th>
+            <th>Username</th>
+            <th>Funtion</th>
+            <th>Action</th>
+            <th>Messages</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+    <tbody>
+      {% for value in contacts %}
+        <tr class="ng-scope">
+            <td class="ng-binding">{{ value.id }}</td>
+            <td class="ng-binding">{{ value.username }}</td>
+            <td class="ng-binding">{{ value.feature }}</td>
+            <td class="ng-binding">{{ value.action }}</td>
+            <td class="ng-binding" style="word-wrap: break-word;min-width: 400px;max-width: 400px;" >
+              {{ value.message }}
+            </td>
+            <td class="ng-binding">{{ value.time }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+</table>
+  </div>
+<nav aria-label="..." align="center">
+  <ul class="pager">
+
+        <li><a href="?page=1">First</a></li>
+
+    {% if contacts.has_previous %}
+        <li><a href="?page={{ contacts.previous_page_number }}"><<</a></li>
+    {% endif %}
+
+    {% for x in page_range %}
+        {% if x == current_page %}
+          <li><a href="?page={{ x }}">[{{ x }}]</a></li>
+        {% else %}
+          <li><a href="?page={{ x }}">{{ x }}</a></li>
+        {% endif %}
+    {% endfor %}
+
+    {% if contacts.has_next %}
+        <li><a href="?page={{ contacts.next_page_number }}">>></a></li>
+    {% endif %}
+
+        <li><a href="?page={{ last_page }}">Last</a></li>
+  </ul>
+</nav>
+</section>
+{% endblock %}

@@ -1,0 +1,79 @@
+#!/bin/bash
+. /etc/rc.d/init.d/functions
+
+user="root"
+prog="swarm.manager"
+exec="/data/swarm_manager/$prog"
+pidfile="/var/run/$prog.pid"
+lockfile="/var/lock/subsys/$prog"
+logfile="/var/log/$prog"
+advertise="advertise"
+consul="consul"
+
+ip_host="10.40.89.10"
+ip_consul="10.40.89.11"
+port_docker_host="12375"
+port_consul="8500"
+host=$(hostname)
+hearbeat="heartbeat"
+delay="delay"
+
+# pull in sysconfig settings
+[ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
+export GOMAXPROCS=${GOMAXPROCS:-2}
+start() {
+#    [ -x $exec ] || exit 5
+#    
+#    [ -f $conffile ] || exit 6
+#    [ -d $confdir ] || exit 6
+
+    umask 077
+
+    touch $logfile $pidfile
+    chown $user:$user $logfile $pidfile
+    echo -n $"Starting $prog: "
+    daemon \
+        --pidfile=$pidfile \
+        --user=root \
+        " { $exec  --debug  manage --host=$ip_host:$port_docker_host --advertise=$ip_host:$port_docker_host consul://$ip_consul:$port_consul &>> $logfile & } ; echo \$! >| $pidfile "
+    
+    RETVAL=$?
+    echo
+    
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stop $prog: "
+    killproc -p $pidfile $exec -HUP
+    echo
+}
+
+rh_status() {
+    status -p "$pidfile" -l $prog $exec
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
+
+case "$1" in
+    start)
+        rh_status_q && exit 0
+        $1
+        ;;
+    stop)
+        rh_status_q || exit 7
+        $1
+        ;;
+    status)
+        rh_status
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status}"
+        exit 2
+esac
+
+exit $?
