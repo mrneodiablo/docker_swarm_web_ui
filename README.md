@@ -42,11 +42,10 @@ TODO: Được viết bằng python2.7 dùng framwork django(1.11) trên sử d�
 ![network 1](image_docker_ui/network.jpg)
 ![network 2](image_docker_ui/network_detail.jpg)
 
-Tool được viết khá lâu so với hiện tại đầu năm 2016, nên hiện nay sẽ không chạy được với các version mới do API docker swarm đã chỉnh sửa.
-Tool có khá nhiều lỗi về security...
+Tool được viết khá lâu so với hiện tại đầu năm 2016
 
 ```
-Phát triển thêm sẽ khá hay,
+Phát triển thêm sẽ khá hay vaf vui, dành cho những ai thích vọc vách,
 NOTED: nên sài kubernetes cho lành AHIHI 
 ```
 
